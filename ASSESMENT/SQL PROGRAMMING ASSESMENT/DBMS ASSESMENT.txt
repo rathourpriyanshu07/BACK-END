@@ -1,0 +1,76 @@
+1. Create Tables
+-- Bank Table
+CREATE TABLE Bank (
+    branch_id INT PRIMARY KEY,
+    branch_name VARCHAR(50),
+    branch_city VARCHAR(50)
+);
+
+-- Account Holder Table
+CREATE TABLE AccountHolder (
+    acc_holder_id INT PRIMARY KEY,
+    account_no VARCHAR(20) UNIQUE,
+    acc_holder_name VARCHAR(100),
+    city VARCHAR(50),
+    contact VARCHAR(15),
+    date_created DATE,
+    account_status VARCHAR(15) CHECK (account_status IN ('Active','Terminated')),
+    account_type VARCHAR(20),
+    balance DECIMAL(12,2)
+);
+
+-- Loan Table
+CREATE TABLE Loan (
+    loan_no INT PRIMARY KEY,
+    branch_id INT,
+    acc_holder_id INT,
+    loan_amount DECIMAL(12,2),
+    loan_type VARCHAR(30),
+    FOREIGN KEY (branch_id) REFERENCES Bank(branch_id),
+    FOREIGN KEY (acc_holder_id) REFERENCES AccountHolder(acc_holder_id)
+);
+
+2. Intra-Bank Transfer Transaction ($100 from Account A → Account B)
+START TRANSACTION;
+
+-- Debit from Account A
+UPDATE AccountHolder
+SET balance = balance - 100
+WHERE account_no = 'A';
+
+-- Credit to Account B
+UPDATE AccountHolder
+SET balance = balance + 100
+WHERE account_no = 'B';
+
+-- Commit changes
+COMMIT;
+
+
+If any step fails, you can use ROLLBACK; to undo the transfer.
+
+3. Fetch Account Holders from the Same City
+SELECT acc_holder_id, acc_holder_name, city
+FROM AccountHolder a
+WHERE EXISTS (
+    SELECT 1
+    FROM AccountHolder b
+    WHERE a.city = b.city
+      AND a.acc_holder_id <> b.acc_holder_id
+);
+
+4. Accounts Created After 15th of Any Month
+SELECT account_no, acc_holder_name
+FROM AccountHolder
+WHERE DAY(date_created) > 15;
+
+5. Display City Name and Count of Branches
+SELECT branch_city, COUNT(branch_id) AS Count_Branch
+FROM Bank
+GROUP BY branch_city;
+
+6. Join Query → Account Holder + Loan Info
+SELECT a.acc_holder_id, a.acc_holder_name, l.branch_id, l.loan_amount
+FROM AccountHolder a
+INNER JOIN Loan l
+    ON a.acc_holder_id = l.acc_holder_id;
