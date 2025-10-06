@@ -1,0 +1,26 @@
+-- Create Customer Table
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(50),
+    city VARCHAR(50),
+    grade INT,
+    salesman_id INT
+);
+
+-- Create Salesman Table
+CREATE TABLE Salesman (
+    salesman_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    city VARCHAR(50),
+    commission DECIMAL(5,2)
+);
+
+-- Query to fetch required data
+SELECT 
+    c.customer_name AS Customer_Name,
+    c.city AS Customer_City,
+    s.name AS Salesman_Name,
+    s.commission AS Commission
+FROM Customer c
+JOIN Salesman s
+    ON c.salesman_id = s.salesman_id;
