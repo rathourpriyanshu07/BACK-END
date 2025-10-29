@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎉 Happy Birthday!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 30px 50px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+    h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .message {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    button {
+      background-color: #ff66b2;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background-color: #ff3385;
+      transform: scale(1.05);
+    }
+    #confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎂 Happy Birthday <span id="name">Friend!</span> 🎉</h1>
+    <p class="message" id="hiddenMsg">💖 Wishing you a day filled with smiles, laughter, and all your favorite things! 💖</p>
+    <button id="wishBtn">Click for a Surprise 🎁</button>
+  </div>
+
+  <canvas id="confetti"></canvas>
+
+  <!-- Optional background music -->
+  <audio id="music" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+
+  <script>
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let confetti = [];
+
+    function randomColor() {
+      const colors = ['#ff0a54','#ff477e','#ff85a1','#fbb1bd','#f9bec7'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function createConfetti() {
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 2,
+          d: Math.random() * 2 + 1,
+          color: randomColor(),
+          tilt: Math.random() * 10 - 10
+        });
+      }
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(p => {
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.ellipse(p.x, p.y, p.r, p.r / 2, Math.PI / 4, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+      updateConfetti();
+    }
+
+    function updateConfetti() {
+      confetti.forEach(p => {
+        p.y += p.d;
+        p.x += Math.sin(p.tilt);
+        if (p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    createConfetti();
+    setInterval(drawConfetti, 30);
+
+    // Button Surprise Logic
+    const btn = document.getElementById('wishBtn');
+    const music = document.getElementById('music');
+    const msg = document.getElementById('hiddenMsg');
+
+    btn.addEventListener('click', () => {
+      music.play();
+      msg.style.opacity = 1; // Fade in message
+      btn.textContent = "🎉 Enjoy your special day! 🎉";
+      btn.disabled = true;
+    });
+  </script>
+</body>
+</html>
