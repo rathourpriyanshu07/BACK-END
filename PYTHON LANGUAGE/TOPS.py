@@ -1,0 +1,54 @@
+class Tops:
+    def admission(self, sname, course, fees):
+        self.sname = sname
+        self.course = course
+        self.fees = fees
+        self.count = 0
+        print("Hello", sname, ", Your Course:", course, "Fees is", fees)
+
+    def installment(self, amount):
+        if self.fees > 0:
+            self.amount = amount
+            if self.amount > self.fees:
+                print("The Amount Exceeds The Remaining Fees:", self.fees)
+            else:
+                self.fees = self.fees - amount
+                self.count = self.count + 1
+                print("Payment Received:", amount)
+                print("Installment Number:", self.count)
+                print("Remaining Fees:", self.fees)
+
+        elif self.fees == 0:
+            print("All Fees Paid")
+        else:
+            print("Overpaid by:", -self.fees)
+
+    def remain(self):
+        print("Fees Remaining:", self.fees)
+
+
+t1 = Tops()
+t1.admission("Priyanshu", "Back-End", 65000)
+
+while True:
+    print("*" * 50)
+    print("1. Installment")
+    print("2. Remaining")
+    print("3. Exit")
+    print("*" * 50)
+    choice = int(input("Enter Choice: "))
+    print("*" * 50)
+
+    if choice == 1:
+        amount = int(input("Enter Amount: "))
+        t1.installment(amount)
+
+    elif choice == 2:
+        t1.remain()
+
+    elif choice == 3:
+        print("Thank You For Using Our Services.")
+        break
+
+    else:
+        print("Invalid Choice. Please Try Again.")
